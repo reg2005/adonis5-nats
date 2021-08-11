@@ -1,0 +1,13 @@
+import { BrokerOptions } from 'moleculer'
+import Env from '@ioc:Adonis/Core/Env'
+const config: BrokerOptions = {
+  // nodeID: 'node-1',
+  transporter: Env.get('NATS_TRANSPORTER'),
+  logLevel: 'error',
+  requestTimeout: 30 * 1000,
+  errorHandler(err, info) {
+    console.error('NatsBroker', err?.message, err)
+    // console.error('Log the error:', err)
+    throw err // Throw further
+  },
+}

@@ -1,0 +1,100 @@
+{
+  "name": "adonis5-nats",
+  "version": "1.0.0",
+  "description": "Adonis NATS broker",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "npm run lint",
+    "test": "node japaFile.js",
+    "mrm": "mrm --preset=@adonisjs/mrm-preset",
+    "clean": "del build",
+    "compile": "npm run lint && npm run clean && tsc && npm run copy:files",
+    "copy:files": "cpx 'templates/**' 'build/templates'",
+    "build": "npm run compile",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint . --ext=.ts",
+    "format": "prettier --write .",
+    "commit": "git-cz",
+    "release": "np",
+    "version": "npm run build",
+    "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json reg2005/adonis5-nats"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reg2005/adonis5-nats.git"
+  },
+  "keywords": [
+    "adonis",
+    "adonis5",
+    "nats",
+    "broker",
+    "microservices"
+  ],
+  "author": "Evgeniy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reg2005/adonis5-nats/issues"
+  },
+  "homepage": "https://github.com/reg2005/adonis5-nats#readme",
+  "types": "build/adonis-typings/index.d.ts",
+  "typings": "build/adonis-typings/index.d.ts",
+  "devDependencies": {
+    "@adonisjs/application": "^5.1.6",
+    "@adonisjs/core": "^5.1.11",
+    "@adonisjs/mrm-preset": "^4.1.2",
+    "@adonisjs/require-ts": "^2.0.7",
+    "@types/node": "^16.4.14",
+    "adonis-provider-tester": "git://github.com/VladyslavParashchenko/adonis-provider-tester.git#main",
+    "commitizen": "^4.2.4",
+    "cpx": "^1.5.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "del-cli": "^4.0.1",
+    "doctoc": "^2.0.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-adonis": "^1.3.3",
+    "eslint-plugin-prettier": "^3.4.0",
+    "github-label-sync": "^2.0.2",
+    "husky": "^7.0.1",
+    "japa": "^3.1.1",
+    "mrm": "^3.0.8",
+    "np": "^7.5.0",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5"
+  },
+  "files": [
+    "build/src",
+    "build/adonis-typings",
+    "build/providers",
+    "build/templates",
+    "build/index.d.ts",
+    "build/index.js"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "np": {
+    "contents": ".",
+    "anyBranch": false
+  },
+  "dependencies": {
+    "moleculer": "^0.14.16",
+    "nats": "^2.1.0"
+  },
+  "adonisjs": {
+    "types": "adonis5-nats",
+    "providers": [
+      "adonis5-nats"
+    ],
+    "templates": {
+      "config": [
+        {
+          "src": "config.txt",
+          "dest": "nats"
+        }
+      ]
+    }
+  }
+}
