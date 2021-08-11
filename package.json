@@ -1,8 +1,8 @@
 {
   "name": "adonis5-nats",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Adonis NATS broker",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "pretest": "npm run lint",
     "test": "node japaFile.js",
@@ -95,6 +95,9 @@
           "dest": "nats"
         }
       ]
+    },
+    "env": {
+      "NATS_TRANSPORTER": "nats://localhost:4222"
     }
   }
 }

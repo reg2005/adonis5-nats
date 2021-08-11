@@ -73,11 +73,26 @@ Route.get('/get-users-ids', async () => {
   return UserService.getUsersIDs()
 })
 ```
+
+
+
+### Add docker-compose.yaml
+```yaml
+version: '3.7'
+services:
+  nats:
+    image: 'nats'
+    ports:
+      - '4222:4222'
+```
+### Run nats
+```bash
+docker-compose up nats
+```
 ### Update manifest
 ```bash
 node ace generate:manifest
 ```
-
 ### Run service and http server
 ```
 node ace users:service
