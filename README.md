@@ -16,10 +16,10 @@ node ace configure adonis5-nats
 
 ## Example usage
 
-### App/Services/UserService.ts:
+### App/Services/UserServiceServer.ts:
 ```typescript
 const sleep = (ms: number = 3000) => new Promise((res) => setTimeout(() => res(true), ms))
-class UserServiceClassServer {
+export class UserServiceClassServer {
   public static serviceName = 'UserServiceClassServer' //required field
 
   /** Your any logic: */
@@ -33,13 +33,17 @@ class UserServiceClassServer {
     return data
   }
 }
-
+```
+### App/Services/UserServiceClient.ts:
+```typescript
+import {UserServiceClassServer} from 'App/Services/UserServiceServer'
+import Broker from '@ioc:Adonis/Addons/NATS'
 class UserServiceClassClient extends UserServiceClassServer {
   constructor() {
     super()
   }
 }
-export const UserService = Broker.addClient<UserServiceClassClient>(
+export const UserServiceClient = Broker.addClient<UserServiceClassClient>(
   UserServiceClassClient,
   UserServiceClassServer
 )
@@ -48,8 +52,8 @@ export const UserService = Broker.addClient<UserServiceClassClient>(
 ### commands/UsersService.ts
 ```typescript
 import { BaseCommand } from '@adonisjs/core/build/standalone'
-import { UserServiceClassServer } from 'App/Services/UserService'
-import Broker from '@ioc:Adonis/Addons/Broker'
+import { UserServiceClassServer } from 'App/Services/UserServiceServer'
+import Broker from '@ioc:Adonis/Addons/NATS'
 export default class UsersService extends BaseCommand {
   public static commandName = 'users:service'
   public static description = ''
@@ -68,9 +72,9 @@ export default class UsersService extends BaseCommand {
 ### start/routes.ts
 ```typescript
 import Route from '@ioc:Adonis/Core/Route'
-import { UserService } from 'App/Services/UserService'
+import { UserServiceClient } from 'App/Services/UserServiceClient'
 Route.get('/get-users-ids', async () => {
-  return UserService.getUsersIDs()
+  return await UserServiceClient.getUsersIDs()
 })
 ```
 

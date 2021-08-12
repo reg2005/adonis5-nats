@@ -11,3 +11,4 @@ const config: BrokerOptions = {
     throw err // Throw further
   },
 }
+export default config
