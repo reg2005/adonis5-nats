@@ -52,7 +52,7 @@ test.group('RedisRPC', (group) => {
     nats = adonisApp.application.container.use('Adonis/Addons/NATS')
     UserServiceServer = await nats.addServer<UserServiceClassServer>(UserServiceClassServer)
 
-    UserServiceClient = nats.addClient<UserServiceClassClient>(
+    UserServiceClient = await nats.addClient<UserServiceClassClient>(
       UserServiceClassClient,
       UserServiceClassServer
     )

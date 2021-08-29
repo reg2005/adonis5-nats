@@ -4,15 +4,17 @@ const debugServer = require('debug')('adonis:nats:server')
 const debugClient = require('debug')('adonis:nats:client')
 export class BrokerInit {
   public broker: ServiceBroker
+  public isBrokerInit = false
   constructor(protected app: Application) {}
-  public async init(brokerOptions: Partial<BrokerOptions> = {}) {
+  public init(brokerOptions: Partial<BrokerOptions> = {}) {
     const config: BrokerOptions = this.app.container.use('Adonis/Core/Config').get('nats', {})
     this.broker = new ServiceBroker({ ...config, ...brokerOptions })
+    return this
   }
   public addClient<T>(clientClass, serverClass): T {
     const cuid = this.app.helpers.cuid
     const self = this
-    clientClass.prototype.isBrokerInit = false
+    this.isBrokerInit = false
     clientClass.prototype.start = async function () {
       if (!this.isBrokerInit) {
         debugClient('client broker first start')
@@ -45,7 +47,7 @@ export class BrokerInit {
   }
   public async addServer(classProto) {
     const cuid = this.app.helpers.cuid
-    await this.init({ nodeID: `${classProto.serviceName}-${cuid()}` })
+    this.init({ nodeID: `${classProto.serviceName}-${cuid()}` })
     const actions = {}
     const classInstance = new classProto()
     for (const method of Object.getOwnPropertyNames(classProto.prototype)) {
@@ -56,8 +58,10 @@ export class BrokerInit {
         }
       }
     }
+    ServiceSchema
     debugServer(`add actions: ${classProto.serviceName}`, Object.keys(actions))
     this.broker.createService({
+      ...(classProto?.serviceOptions || {}),
       name: classProto.serviceName,
       actions,
     })

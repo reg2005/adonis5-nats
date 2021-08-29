@@ -18,10 +18,11 @@ node ace configure adonis5-nats
 
 ### App/Services/UserServiceServer.ts:
 ```typescript
+import { ServiceSchema } from 'moleculer'
 const sleep = (ms: number = 3000) => new Promise((res) => setTimeout(() => res(true), ms))
 export class UserServiceClassServer {
   public static serviceName = 'UserServiceClassServer' //required field
-
+  public static serviceOptions: ServiceSchema = {} //any optins like metadata and other
   /** Your any logic: */
   public users: [1, 2, 3]
   public async getUsersIDs() {
@@ -36,9 +37,10 @@ export class UserServiceClassServer {
 ```
 ### App/Services/UserServiceClient.ts:
 ```typescript
-import {UserServiceClassServer} from 'App/Services/UserServiceServer'
+import { UserServiceClassServer } from 'App/Services/UserServiceServer'
 import Broker from '@ioc:Adonis/Addons/NATS'
 class UserServiceClassClient extends UserServiceClassServer {
+  public static serviceName = 'UserServiceClassServer'
   constructor() {
     super()
   }
