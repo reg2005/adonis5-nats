@@ -58,7 +58,6 @@ export class BrokerInit {
         }
       }
     }
-    ServiceSchema
     debugServer(`add actions: ${classProto.serviceName}`, Object.keys(actions))
     this.broker.createService({
       ...(classProto?.serviceOptions || {}),
