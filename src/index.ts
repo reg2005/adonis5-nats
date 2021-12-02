@@ -28,16 +28,16 @@ export class BrokerInit {
         debugClient(`add method: ${method}`)
         clientClass.prototype[method] = async function (body: {} = {}) {
           await this.start()
-          const callName = `${serverClass.serviceName}.${method}`
-          const logName = `${callName}`
-          console.time(logName)
+          // const callName = `${serverClass.serviceName}.${method}`
+          // const logName = `${callName}`
+          // console.timelogName)
           try {
             const result = await self.broker.call(`${serverClass.serviceName}.${method}`, body)
             debugClient(`result for method: ${result}`)
-            console.timeEnd(logName)
+            // console.timeEnd(logName)
             return result
           } catch (error) {
-            console.timeEnd(logName)
+            // console.timeEnd(logName)
             throw error
           }
         }
