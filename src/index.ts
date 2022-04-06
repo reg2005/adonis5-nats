@@ -1,4 +1,4 @@
-import { ServiceBroker, BrokerOptions } from 'moleculer'
+import { ServiceBroker, BrokerOptions, CallingOptions, ServiceSchema } from 'moleculer'
 import { Application } from '@adonisjs/application'
 const debugServer = require('debug')('adonis:nats:server')
 const debugClient = require('debug')('adonis:nats:client')
@@ -11,7 +11,7 @@ export class BrokerInit {
     this.broker = new ServiceBroker({ ...config, ...brokerOptions })
     return this
   }
-  public addClient<T>(clientClass, serverClass): T {
+  public addClient<T>(clientClass, serverClass, brokerOptions: Partial<BrokerOptions> = {}): T {
     const cuid = this.app.helpers.cuid
     const self = this
     this.isBrokerInit = false
@@ -19,20 +19,27 @@ export class BrokerInit {
       if (!this.isBrokerInit) {
         debugClient('client broker first start')
         this.isBrokerInit = true
-        self.init({ nodeID: `${serverClass.serviceName}-client-${cuid()}` })
+        self.init({ nodeID: `${serverClass.serviceName}-client-${cuid()}`, ...brokerOptions })
         await self.broker.start()
       }
     }
     for (const method of Object.getOwnPropertyNames(serverClass.prototype)) {
       if (method !== 'constructor') {
         debugClient(`add method: ${method}`)
-        clientClass.prototype[method] = async function (body: {} = {}) {
+        clientClass.prototype[method] = async function (
+          body: {} = {},
+          options: CallingOptions = {}
+        ) {
           await this.start()
           // const callName = `${serverClass.serviceName}.${method}`
           // const logName = `${callName}`
           // console.timelogName)
           try {
-            const result = await self.broker.call(`${serverClass.serviceName}.${method}`, body)
+            const result = await self.broker.call(
+              `${serverClass.serviceName}.${method}`,
+              body,
+              options
+            )
             debugClient(`result for method: ${result}`)
             // console.timeEnd(logName)
             return result
@@ -45,7 +52,7 @@ export class BrokerInit {
     }
     return new clientClass()
   }
-  public async addServer(classProto) {
+  public async addServer(classProto, options: Partial<ServiceSchema> = {}) {
     const cuid = this.app.helpers.cuid
     this.init({ nodeID: `${classProto.serviceName}-${cuid()}` })
     const actions = {}
@@ -61,6 +68,7 @@ export class BrokerInit {
     debugServer(`add actions: ${classProto.serviceName}`, Object.keys(actions))
     this.broker.createService({
       ...(classProto?.serviceOptions || {}),
+      ...(options || {}),
       name: classProto.serviceName,
       actions,
     })
