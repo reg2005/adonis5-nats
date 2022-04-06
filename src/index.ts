@@ -52,9 +52,13 @@ export class BrokerInit {
     }
     return new clientClass()
   }
-  public async addServer(classProto, options: Partial<ServiceSchema> = {}) {
+  public async addServer(
+    classProto,
+    brokerOptions: Partial<BrokerOptions> = {},
+    serviceOptions: Partial<ServiceSchema> = {}
+  ) {
     const cuid = this.app.helpers.cuid
-    this.init({ nodeID: `${classProto.serviceName}-${cuid()}` })
+    this.init({ nodeID: `${classProto.serviceName}-${cuid()}`, ...brokerOptions })
     const actions = {}
     const classInstance = new classProto()
     for (const method of Object.getOwnPropertyNames(classProto.prototype)) {
@@ -68,7 +72,7 @@ export class BrokerInit {
     debugServer(`add actions: ${classProto.serviceName}`, Object.keys(actions))
     this.broker.createService({
       ...(classProto?.serviceOptions || {}),
-      ...(options || {}),
+      ...(serviceOptions || {}),
       name: classProto.serviceName,
       actions,
     })

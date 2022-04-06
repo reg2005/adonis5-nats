@@ -1,6 +1,6 @@
 {
   "name": "adonis5-nats",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Adonis NATS broker",
   "main": "build/index.js",
   "scripts": {
