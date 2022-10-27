@@ -1,6 +1,6 @@
 {
   "name": "adonis5-nats",
-  "version": "1.0.11",
+  "version": "1.1.11",
   "description": "Adonis NATS broker",
   "main": "build/index.js",
   "scripts": {
@@ -80,8 +80,8 @@
     "anyBranch": false
   },
   "dependencies": {
-    "moleculer": "^0.14.16",
-    "nats": "^2.1.0"
+    "moleculer": "^0.14.24",
+    "nats": "^2.8.0"
   },
   "adonisjs": {
     "types": "adonis5-nats",
